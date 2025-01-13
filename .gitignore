@@ -3,4 +3,5 @@ __pycache__/
 env/
 Local/
 .env
-logs/
+logs/*
+!.gitignore

@@ -17,7 +17,7 @@ function refreshDialogButtonOptions() {
 
 refreshDialogButtonOptions()
 const container = document.querySelector('.grid-container') 
-const URL = 'http://127.0.0.1:8000/get-news/?start_id='
+const URL = '/get-news/?start_id='
 
 function getLastNewsId() {
     const data = container.querySelector(".item-wrapper:last-of-type").id
