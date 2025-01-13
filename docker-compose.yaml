@@ -19,7 +19,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
-      start_period: 5s
+      start_period: 15s
 
   mongodb:
     image: mongo:8.0.4
@@ -39,7 +39,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
-      start_period: 5s
+      start_period: 15s
 
   
   app:
