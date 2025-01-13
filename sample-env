@@ -1,0 +1,13 @@
+GEN_TITLE_SERVER_URL=amqp://myuser:mypassword@localhost:5672/
+GEN_ARTICLE_SERVER_URL=amqp://myuser:mypassword@localhost:5672/
+GEN_IMAGE_SERVER_URL=amqp://myuser:mypassword@localhost:5672/
+
+RABBITMQ_USER=user
+RABBITMQ_PASS=pass
+RABBITMQ_ADDR=rabbitmq
+RABBITMQ_PORT=5672
+
+MONGODB_USER=user
+MONGODB_PASS=pass
+MONGODB_ADDR=mongodb
+MONGODB_PORT=27017

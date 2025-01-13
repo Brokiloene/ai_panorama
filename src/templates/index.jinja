@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="src/static/css/styles.css" type="text/css" rel="stylesheet">
+</head>
+<head>
+    <header>
+        HEADER
+        <a class="add-article open-dialog" href="#add-article-dialog">Добавить новость</a>
+        <div class="add-article-form-container dialog" id="add-article-dialog">
+            <a class="close-dialog" href="#">❌</a>
+            <h1 class="add-article-header">Создайте свою новость!</h2>
+            <form class="add-article-form" name="add-article" method="post" action="/add-article" enctype="multipart/form-data">
+                <label  class="form-element" for="title">Заголовок</label>
+                <button class="form-element gen-title-btn" type="button">Сгенерировать</button>
+                <input  class="form-element" type="text" id="title" name="title" required minlength="20">
+
+                <label  class="form-element" for="article_text">Текст</label>
+                <button class="form-element gen-article-btn" type="button">Сгенерировать</button>
+                <textarea class="form-element article-body" id="article_text" name="article_text" required minlength="40" rows="4" cols="50" placeholder="Введите ваш текст здесь..."></textarea>
+
+                <input class="form-element" type="hidden" id="image" name="image">
+
+                <button class="form-element gen-image-btn" type="button">Сгенерировать изображение</button>
+                <img class="article-image hidden" src="" />
+                <button class="send-article" type="submit">Добавить новость</button>
+                
+            </form>
+        </div>
+    </header>
+    <main>
+        <div class="grid-container">
+            {{ data }}
+            </div>
+        </div>
+    </main>
+    <script src="src/static/js/infinite_scroll.js"></script>
+    <script src="src/static/js/add_new_article.js"></script>
+    <script src="src/static/js/datagen_server_connection.js"></script>
+
+</head>
+</html>

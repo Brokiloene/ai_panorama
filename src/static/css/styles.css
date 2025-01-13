@@ -1,0 +1,146 @@
+@import "normalize.css";
+body header {
+  height: 8vh;
+  background-color: red;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+body.disable-scroll {
+  overflow: hidden;
+}
+
+div.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 32px;
+  grid-auto-flow: dense;
+  margin: 10px;
+}
+@media (max-width: 891px) {
+  div.grid-container {
+    display: flex;
+    flex-direction: column;
+  }
+}
+div.dialog {
+  display: none;
+  inset: 10%;
+  background: rgba(107, 104, 104, 0.85);
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  z-index: 15;
+}
+div.dialog a {
+  position: absolute;
+  top: 0;
+  right: 1%;
+  display: inline-block;
+  color: red;
+  text-decoration: none;
+  font-size: 3rem;
+}
+div.dialog img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+div.dialog:target {
+  display: block;
+  flex-direction: column;
+}
+div.item-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+}
+
+a.grid-element {
+  max-height: 420px;
+  min-height: 300px;
+  background-color: lightblue;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+}
+a.grid-element:nth-of-type(31n+3) {
+  grid-column: 1/-1;
+}
+a.grid-element:nth-of-type(16n+2) {
+  grid-column: -3/-1;
+}
+a.grid-element:nth-of-type(16n+8) {
+  grid-column: 1/-3;
+}
+a.grid-element img {
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+a.grid-element span {
+  display: block;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  height: auto;
+  width: 100%;
+  background-color: grey;
+  opacity: 0.85;
+  padding: 5px;
+  font-size: larger;
+  color: white;
+}
+a.grid-element:hover {
+  cursor: pointer;
+  filter: brightness(0.5);
+  transition: filter 0.5s ease;
+}
+
+div.add-article-form-container h1 {
+  display: inline-block;
+  text-align: center;
+  margin-bottom: 20px;
+  max-width: 80%;
+}
+
+form.add-article-form {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 1%;
+  margin: 2%;
+  overflow: scroll;
+  height: 80%;
+}
+form.add-article-form input, form.add-article-form button.gen-image-btn, form.add-article-form textarea {
+  grid-column: span 2;
+}
+form.add-article-form label {
+  text-align: center;
+  font-size: 2rem;
+}
+form.add-article-form input.article-body {
+  min-height: 100px;
+}
+form.add-article-form img.article-image {
+  width: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+  display: block;
+}
+form.add-article-form img.hidden {
+  display: none;
+}
+form.add-article-form button.send-article {
+  display: block;
+  width: 100%;
+}
+
+@media (max-width: 891px) {
+  form.add-article-form {
+    display: flex;
+    flex-direction: column;
+  }
+}

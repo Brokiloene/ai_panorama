@@ -1,0 +1,66 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672
+      - 5672:5672
+    hostname: ai_panorama_rabbitmq
+    container_name: ai_panorama_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: -rabbit disk_free_limit 2147483648
+    networks:
+      - ai_panorama_net
+    volumes:
+      - rabbitmq_data_container:/var/lib/rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  mongodb:
+    image: mongo:8.0.4
+    hostname: ai_panorama_mongodb
+    container_name: ai_panorama_mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASS}
+    ports:
+      - 27017:27017
+    networks:
+      - ai_panorama_net
+    volumes:
+      - mongodb_data_container:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    container_name: ai_panorama_app
+    ports:
+      - 8000:8000
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - ai_panorama_net
+    
+networks:
+  ai_panorama_net:
+    driver: bridge
+
+volumes:
+  mongodb_data_container:
+  rabbitmq_data_container:
