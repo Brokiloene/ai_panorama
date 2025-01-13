@@ -30,7 +30,7 @@ const img = document.querySelector(".article-image")
 let base64Img = ""
 
 genImageBtn.addEventListener('click', async () => {
-  document.querySelector(".submit-btn").disabled = true;
+  document.querySelector(".send-article").disabled = true;
   const response = await fetch("/gen-image")
   console.log(response.ok);
   const imageBlob = await response.blob();
@@ -51,7 +51,7 @@ genImageBtn.addEventListener('click', async () => {
   };
 
   base64Img = await convertBlobToBase64(imageBlob);
-  document.querySelector(".submit-btn").disabled = false;
+  document.querySelector(".send-article").disabled = false;
 })
 
 const formElement = document.querySelector(".add-article-form")
