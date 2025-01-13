@@ -54,6 +54,15 @@ genImageBtn.addEventListener('click', async () => {
 
 const formElement = document.querySelector(".add-article-form")
 const hiddenInput = document.querySelector("#image")
-formElement.addEventListener('submit', () => {
-  hiddenInput.value = base64Img
-})
+// formElement.addEventListener('submit', () => {
+//   hiddenInput.value = base64Img
+// })
+
+formElement.addEventListener('submit', (event) => {
+  if (!base64Img) {
+    event.preventDefault(); // Останавливаем отправку формы
+    alert("Изображение ещё загружается. Пожалуйста, дождитесь завершения!");
+  } else {
+    hiddenInput.value = base64Img; // Устанавливаем значение только после загрузки
+  }
+});
