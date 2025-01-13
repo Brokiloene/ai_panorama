@@ -35,6 +35,7 @@ genImageBtn.addEventListener('click', async () => {
   console.log(response.ok);
   const imageBlob = await response.blob();
   console.log(imageBlob);
+  await new Promise((resolve) => setTimeout(resolve, 100));
   const imageUrl = window.URL.createObjectURL(imageBlob)
 
   console.log(imageUrl)
@@ -51,20 +52,12 @@ genImageBtn.addEventListener('click', async () => {
   };
 
   base64Img = await convertBlobToBase64(imageBlob);
+  await new Promise((resolve) => setTimeout(resolve, 100));
   document.querySelector(".send-article").disabled = false;
 })
 
 const formElement = document.querySelector(".add-article-form")
 const hiddenInput = document.querySelector("#image")
-// formElement.addEventListener('submit', () => {
-//   hiddenInput.value = base64Img
-// })
-
-formElement.addEventListener('submit', (event) => {
-  if (!base64Img) {
-    event.preventDefault(); // Останавливаем отправку формы
-    alert("Изображение ещё загружается. Пожалуйста, дождитесь завершения!");
-  } else {
-    hiddenInput.value = base64Img; // Устанавливаем значение только после загрузки
-  }
-});
+formElement.addEventListener('submit', () => {
+  hiddenInput.value = base64Img
+})
