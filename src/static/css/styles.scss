@@ -1,5 +1,10 @@
 @import "normalize.css";
 
+html, body {
+    overflow: visible;
+    height: 100%;
+}
+
 body {
     header {
         height: 8vh;
@@ -12,6 +17,10 @@ body {
     &.disable-scroll {
         overflow: hidden;
     }
+}
+
+#sentinel {
+    height: 10px;
 }
 
 div {

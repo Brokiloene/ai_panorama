@@ -50,8 +50,7 @@ async function loadNewsBatch(lastNewsId) {
 // })
 
 let isLoading = false;
-const sentinel = document.createElement('div');
-document.body.appendChild(sentinel);
+const sentinel = document.querySelector('#sentinel');
 
 const observer = new IntersectionObserver(async (entries) => {
     if (entries[0].isIntersecting && !isLoading) {
