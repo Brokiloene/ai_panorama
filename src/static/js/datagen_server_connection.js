@@ -1,7 +1,7 @@
 const genTitleBtn = document.querySelector(".gen-title-btn")
 const titleInput = document.querySelector("#title")
 genTitleBtn.addEventListener('click', async () => {
-  const response = await fetch("/gen-title")
+  const response = await fetch(`/gen-title/?prompt=${titleInput.value}`)
   if (response.status == 500) {
     data = "Не удалось сгенерировать :("
   } else {
@@ -13,7 +13,7 @@ genTitleBtn.addEventListener('click', async () => {
 const genArticleBtn = document.querySelector(".gen-article-btn")
 const articleInput = document.querySelector("#article_text")
 genArticleBtn.addEventListener('click', async () => {
-  const response = await fetch("/gen-article")
+  const response = await fetch(`/gen-article/?prompt=${articleInput.value}`)
   let data = ""
   if (response.status == 500) {
     data = "Не удалось сгенерировать :("
@@ -23,44 +23,6 @@ genArticleBtn.addEventListener('click', async () => {
   console.log(data)
   articleInput.value = data
 })
-
-// window.URL = window.URL || window.webkitURL;
-// const genImageBtn = document.querySelector(".gen-image-btn")
-// const img = document.querySelector(".article-image")
-// let base64Img = ""
-
-// genImageBtn.addEventListener('click', async () => {
-//   document.querySelector(".send-article").disabled = true;
-//   const response = await fetch("/gen-image")
-//   console.log(response.ok);
-//   const imageBlob = await response.blob();
-//   console.log(imageBlob);
-//   await new Promise((resolve) => setTimeout(resolve, 100));
-//   const imageUrl = window.URL.createObjectURL(imageBlob)
-
-//   console.log(imageUrl)
-//   img.src = imageUrl
-//   img.classList.remove("hidden")
-
-//   const convertBlobToBase64 = (blob) => {
-//     return new Promise((resolve, reject) => {
-//       const reader = new FileReader();
-//       reader.onloadend = () => resolve(reader.result);
-//       reader.onerror = (error) => reject(error);
-//       reader.readAsDataURL(blob);
-//     });
-//   };
-
-//   base64Img = await convertBlobToBase64(imageBlob); 
-//   await new Promise((resolve) => setTimeout(resolve, 100));
-//   document.querySelector(".send-article").disabled = false;
-// })
-
-// const formElement = document.querySelector(".add-article-form")
-// const hiddenInput = document.querySelector("#image")
-// formElement.addEventListener('submit', () => {
-//   hiddenInput.value = base64Img
-// })
 
 window.URL = window.URL || window.webkitURL
 
@@ -75,7 +37,7 @@ genImageBtn.addEventListener('click', async () => {
   sendArticleBtn.disabled = true
 
   try {
-    const response = await fetch("/gen-image")
+    const response = await fetch(`/gen-image/?prompt=${titleInput.value}${articleInput.value}`)
     if (!response.ok) {
       console.error("Ошибка при получении изображения:", response.statusText)
       return
@@ -87,7 +49,6 @@ genImageBtn.addEventListener('click', async () => {
     imgElement.src = imageUrl
     imgElement.classList.remove("hidden")
 
-    // Теперь кнопка отправки снова доступна
     sendArticleBtn.disabled = false
   } catch (error) {
     console.error("Ошибка при запросе к /gen-image:", error)
@@ -95,18 +56,14 @@ genImageBtn.addEventListener('click', async () => {
 })
 
 formElement.addEventListener('submit', async (event) => {
-  event.preventDefault() // Остановим нативную отправку, чтобы сделать fetch вручную
+  event.preventDefault()
 
   try {
     const formData = new FormData(formElement)
-    // Если у нас есть картинка, прикрепляем её к FormData
     if (imageBlob) {
-      // Второй аргумент – это имя файла (обязательно указываем расширение), 
-      // чтобы бэкенд понимал, что это за файл
       formData.append("image", imageBlob, "generated-image.png")
     }
 
-    // Теперь отправляем форму через fetch
     const response = await fetch(formElement.action, {
       method: formElement.method,
       body: formData
@@ -117,7 +74,6 @@ formElement.addEventListener('submit', async (event) => {
       return
     }
 
-    // Обработка ответа от сервера при необходимости
     const result = await response.json()
     console.log("Сервер ответил:", result)
 

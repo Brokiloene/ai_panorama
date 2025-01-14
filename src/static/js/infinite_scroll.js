@@ -34,21 +34,6 @@ async function loadNewsBatch(lastNewsId) {
     return data
 }
 
-// let isLoading = false
-// window.addEventListener('scroll', async () => {
-//     if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight && !isLoading) {
-//         isLoading = true
-//         const lastNewsId = getLastNewsId()
-//         const data = await loadNewsBatch(lastNewsId)
-//         if (data.length !== 0) {
-//             container.insertAdjacentHTML("beforeend", data)
-//             refreshDialogButtonOptions()
-//         }
-//         isLoading = false
-
-//     }
-// })
-
 let isLoading = false;
 const sentinel = document.querySelector('#sentinel');
 

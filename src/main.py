@@ -1,7 +1,7 @@
 from typing import Annotated
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Form, Response, status, Depends, UploadFile, File
+from fastapi import FastAPI, Form, Response, status, Depends, UploadFile, File, Query
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -107,11 +107,11 @@ async def create_article(
     await news_dao.create(Article(image_path=image_path, title=title, article_text=article_text))
 
 
-@app.get("/gen-title", response_class=Response)
-async def gen_title():
+@app.get("/gen-title/", response_class=Response)
+async def gen_title(prompt: str = Query()):
     try:
         response_body = await app.state.rpc_client.rpc_request(
-            message_body=b"Title gen prompt",
+            message_body=bytes(prompt, encoding='utf-8'),
             routing_key=config.rabbitmq.ROUTING_KEY_TITLE,
             timeout=5.0
         )
@@ -123,11 +123,11 @@ async def gen_title():
     return Response(content=text_response, media_type="text/plain")
 
 
-@app.get("/gen-article", response_class=Response)
-async def gen_article():
+@app.get("/gen-article/", response_class=Response)
+async def gen_article(prompt: str = Query()):
     try:
         response_body = await app.state.rpc_client.rpc_request(
-            message_body=b"Article gen prompt",
+            message_body=bytes(prompt, encoding='utf-8'),
             routing_key=config.rabbitmq.ROUTING_KEY_ARTICLE,
             timeout=5.0
         )
@@ -140,11 +140,11 @@ async def gen_article():
     return Response(content=text_response, media_type="text/plain")
 
 
-@app.get("/gen-image", response_class=Response)
-async def gen_image():
+@app.get("/gen-image/", response_class=Response)
+async def gen_image(prompt: str = Query()):
     try:
         response_body = await app.state.rpc_client.rpc_request(
-            message_body=b"Please generate an image",
+            message_body=bytes(prompt, encoding='utf-8'),
             routing_key=config.rabbitmq.ROUTING_KEY_IMAGE,
             timeout=5.0
         )
@@ -157,6 +157,6 @@ async def gen_image():
 
 
 if __name__ == '__main__':
-    # uvicorn.run("main:app", reload=True, log_config=None)
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_config=None)
+    uvicorn.run("main:app", reload=True, log_config=None)
+    # uvicorn.run(app, host="0.0.0.0", port=8000, log_config=None)
     
