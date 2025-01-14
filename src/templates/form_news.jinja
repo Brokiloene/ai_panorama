@@ -7,12 +7,12 @@
 
     <div id="{{ item._id }}" class="dialog item-wrapper">
         <div class="item-content">
+            <a href="#" class="close-dialog">&times;</a>
             <img src="{{ item.image_path or placeholder }}" onerror="this.onerror=null; this.src='src/static/images/placeholder.png'" alt="">
             <h2>{{ item.title }}</h2>
             <span>
                 {{ item.article_text }}
             </span>
         </div>
-        <a href="#" class="close-dialog">&times;</a>
     </div>
 {% endfor %}

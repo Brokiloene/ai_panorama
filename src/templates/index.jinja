@@ -6,30 +6,46 @@
     <link href="src/static/css/styles.css" type="text/css" rel="stylesheet">
 </head>
 <head>
-    <header>
-        HEADER
-        <a class="add-article open-dialog" href="#add-article-dialog">Добавить новость</a>
-        <div class="add-article-form-container dialog" id="add-article-dialog">
-            <a class="close-dialog" href="#">❌</a>
-            <h1 class="add-article-header">Создайте свою новость!</h2>
+<header>
+    <div class="logo-wrapper">
+        <img src="src/static/images/logo.png" alt="" class="logo-img">
+        <span class="logo-text">аи панорама</span>
+    </div>
+    <a class="add-article open-dialog" href="#add-article-dialog">
+        <span>сгенерировать новость</span>
+    </a>
+    <div class="dialog" id="add-article-dialog">
+        <div class="dialog-form-wrapper">
+            <a href="#" class="close-dialog">&times;</a>
             <form class="add-article-form" name="add-article" method="post" action="/add-article" enctype="multipart/form-data">
                 <label  class="form-element" for="title">Заголовок</label>
-                <button class="form-element gen-title-btn" type="button">Сгенерировать</button>
+                <button class="form-element gen-title-btn" type="button"></button>
                 <input  class="form-element" type="text" id="title" name="title" required minlength="20">
 
                 <label  class="form-element" for="article_text">Текст</label>
-                <button class="form-element gen-article-btn" type="button">Сгенерировать</button>
+                <button class="form-element gen-article-btn" type="button"></button>
                 <textarea class="form-element article-body" id="article_text" name="article_text" required minlength="40" rows="4" cols="50" placeholder="Введите ваш текст здесь..."></textarea>
 
-                <input class="form-element" type="hidden" id="image" name="image">
 
-                <button class="form-element gen-image-btn" type="button">Сгенерировать изображение</button>
-                <img class="article-image hidden" src="" />
+                <label  class="form-element" for="image">Изображение</label>
+                <button class="form-element gen-image-btn" type="button"></button>
+                <div class="fict"></div>
+                <input class="form-element" type="hidden" id="image" name="image">
+                <img class="article-image" src="src/static/images/placeholder.png" />
                 <button class="send-article" type="submit">Добавить новость</button>
-                
             </form>
         </div>
-    </header>
+
+    </div>
+
+
+</header>
+    <div class="caution">
+        <span>ИИ-ГЕНЕРАЦИЯ</span>
+        <span>ФЕЙКОВЫХ</span>
+        <span>НОВОСТЕЙ</span>
+
+    </div>
     <main>
         <div class="grid-container">
             {{ data }}

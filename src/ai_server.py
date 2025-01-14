@@ -6,7 +6,8 @@ import aio_pika
 from aio_pika import ExchangeType
 
 # Параметры подключения
-RABBITMQ_URL = "amqp://rabbitmqPanoramaAI:rabbitmqPasswordPanoramaAI@http://212.192.246.59:5672"
+RABBITMQ_URL = "amqp://myuser:mypassword@127.0.0.1:5672/"
+
 
 RPC_EXCHANGE_NAME = "rpc_exchange"
 EXCHANGE_TYPE = ExchangeType.DIRECT
