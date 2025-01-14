@@ -12,6 +12,7 @@
 | Марченко Алексей Эдуардович  | М80-407Б-21 |
 
 ## Презентация проекта
+https://docs.google.com/presentation/d/1S7XJIa-9Luv0pL-otTO94DXD1gf_V4lZ_kbYFZxiMI0/edit#slide=id.g3257e494b97_2_20
 ## Отчет
 ### Описание
 ### Бизнес цель проекта
