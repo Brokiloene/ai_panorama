@@ -157,6 +157,6 @@ async def gen_image():
 
 
 if __name__ == '__main__':
-    uvicorn.run("main:app", reload=True, log_config=None)
-    # uvicorn.run(app, host="0.0.0.0", port=8000, log_config=None)
+    # uvicorn.run("main:app", reload=True, log_config=None)
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_config=None)
     
