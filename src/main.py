@@ -1,7 +1,7 @@
 from typing import Annotated
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Form, Response, status, Depends
+from fastapi import FastAPI, Form, Response, status, Depends, UploadFile, File
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -98,12 +98,12 @@ async def get_news(start_id: str, response: Response, news_dao: NewsDAO = Depend
 async def create_article(
     title: Annotated[str, Form()],
     article_text: Annotated[str, Form()],
-    image: Annotated[str, Form()],
+    image: Annotated[UploadFile, File()],
     news_dao: NewsDAO = Depends(get_news_dao)
 ):
     news_cnt = await news_dao.count_news()
     filename = str(news_cnt)
-    image_path = await save_image_service(image, filename)
+    image_path = await save_image_service(await image.read(), filename)
     await news_dao.create(Article(image_path=image_path, title=title, article_text=article_text))
 
 
