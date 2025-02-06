@@ -10,5 +10,4 @@ EXPOSE 5672
 EXPOSE 8000
 EXPOSE 27017
 
-# CMD ["bash"]
 CMD [ "python", "src/main.py"]

@@ -10,7 +10,7 @@ from app.services import S3Service, AIApiService
 
 
 def get_db_client() -> AsyncIOMotorClient:
-    return AsyncIOMotorClient(config.mongodb.MONGODB_URL)
+    return AsyncIOMotorClient(**config.mongodb.client_config)
 
 
 async def get_s3_service() -> S3Service:

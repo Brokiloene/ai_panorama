@@ -10,17 +10,11 @@ from app.exceptions import S3LoadError, S3NotFoundError
 from app.config.system import logger
 
 class S3Service:
-    # def __init__(self, client: types_aiobotocore_s3.Client):
-    #     self.client = client
-    
     async def get_s3_client(self):
         session = aioboto3.Session()
         return session.client(
-            "s3",
-            endpoint_url=config.s3.URL,
-            aws_access_key_id=config.s3.ACCESS_KEY,
-            aws_secret_access_key=config.s3.SECRET_KEY
-    )
+            **config.s3.client_config
+        )
     
    
     async def upload_object(
@@ -32,6 +26,7 @@ class S3Service:
     ):
         """
         :raises `S3LoadError`:
+        :raises `S3NotFoundError`:
         """
         try:
             await client.upload_fileobj(
@@ -48,8 +43,6 @@ class S3Service:
                 bucket=bucket, 
                 object_name=object_name
             )
-        # finally:
-        #     self.client.close()
 
     async def download_object(
         self, 
@@ -59,6 +52,7 @@ class S3Service:
     ) -> dict:
         """
         :raises `S3LoadError`:
+        :raises `S3NotFoundError`:
         """
         try:
             data = await client.get_object(Bucket=bucket, Key=object_name)
@@ -77,7 +71,4 @@ class S3Service:
                     bucket=bucket, 
                     object_name=object_name
                 )
-        # finally:
-        #     self.client.close()
         return data
-    

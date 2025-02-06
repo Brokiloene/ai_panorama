@@ -15,12 +15,14 @@ from app.models import Article
 from app.services import S3Service, AIApiService
 from app.exceptions import S3LoadError, S3NotFoundError
 from app.dependencies import (
-    lifespan, get_news_dao, get_ai_api_service, get_s3_service
+    lifespan, 
+    get_news_dao, 
+    get_ai_api_service, 
+    get_s3_service
 )
 
 
 app = FastAPI(lifespan=lifespan)
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -57,6 +59,7 @@ async def get_news(
     else:
         return html_view(template_name, data)
 
+
 @app.get("/image/{file_key}")
 async def get_image(
     file_key: str,
@@ -84,8 +87,6 @@ async def get_image(
     
     except S3LoadError:
         return Response(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-
     
 
 @app.post("/add-article")
@@ -183,6 +184,12 @@ async def gen_image(
 
 
 if __name__ == '__main__':
-    # uvicorn.run("main:app", reload=True, log_config=None)
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_config=None)
+    uvicorn.run(
+        app, 
+        host="0.0.0.0", 
+        port=8000, 
+        log_config=None, 
+        ssl_certfile=config.system.TLS_CERTIFICATE, 
+        ssl_keyfile=config.system.TLS_PRIVATE_KEY
+    )
     

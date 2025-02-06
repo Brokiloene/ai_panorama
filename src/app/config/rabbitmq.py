@@ -4,13 +4,12 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-RABBITMQ_USER = os.getenv("RABBITMQ_USER")
-RABBITMQ_PASS = os.getenv("RABBITMQ_PASS")
-RABBITMQ_ADDR = os.getenv("RABBITMQ_ADDR")
-RABBITMQ_PORT = os.getenv("RABBITMQ_PORT")
+USER = os.getenv("RABBITMQ_USER")
+PASS = os.getenv("RABBITMQ_PASS")
+ADDR = os.getenv("RABBITMQ_ADDR")
+PORT = os.getenv("RABBITMQ_PORT")
 
-RABBITMQ_URL = f"amqp://{RABBITMQ_USER}:{RABBITMQ_PASS}@{RABBITMQ_ADDR}:{RABBITMQ_PORT}"
-print("================================", RABBITMQ_URL)
+URL = f"amqp://{USER}:{PASS}@{ADDR}:{PORT}"
 
 EXCHANGE_NAME = "rpc_exchange"
 EXCHANGE_TYPE = ExchangeType.DIRECT

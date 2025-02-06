@@ -11,7 +11,7 @@ class AIApiService:
         self.pending_requests: dict[str, asyncio.Future] = {}
 
     async def start_connection(self):
-        self.connection = await aio_pika.connect_robust(config.rabbitmq.RABBITMQ_URL)
+        self.connection = await aio_pika.connect_robust(config.rabbitmq.URL)
         self.channel = await self.connection.channel()
         self.exchange = await self.channel.declare_exchange(
             config.rabbitmq.EXCHANGE_NAME, 

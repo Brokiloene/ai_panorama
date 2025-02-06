@@ -32,8 +32,10 @@ services:
       - aip_net
     volumes:
       - mongodb_data_container:/data/db
+      - ./certs:/.mongodb/certs
+    command: mongod --tlsMode requireTLS --tlsCertificateKeyFile /.mongodb/certs/combined.pem --tlsCAFile /.mongodb/certs/combined.pem
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      test: mongosh --tls --tlsCertificateKeyFile .mongodb/certs/combined.pem --tlsAllowInvalidCertificates --eval "db.runCommand('ping')" --quiet
       interval: 5s
       timeout: 5s
       retries: 3
@@ -52,9 +54,10 @@ services:
       - aip_net
     volumes:
       - minio_data_container:/data
+      - ./certs:/root/.minio/certs
     command: server /data --console-address ":9001"
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      test: ["CMD", "curl", "-k", "https://127.0.0.1:9000/minio/health/live"]
       interval: 5s
       timeout: 5s
       retries: 3
@@ -77,6 +80,7 @@ services:
     networks:
       - aip_net
     
+
 networks:
   aip_net:
     driver: bridge
