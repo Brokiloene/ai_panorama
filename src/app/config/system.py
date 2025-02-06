@@ -1,12 +1,7 @@
 import logging.handlers
-import os
 from dotenv import load_dotenv
 
 load_dotenv()
-
-GEN_TITLE_SERVER_URL   = os.getenv("GEN_TITLE_SERVER_URL")
-GEN_ARTICLE_SERVER_URL = os.getenv("GEN_ARTICLE_SERVER_URL")
-GEN_IMAGE_SERVER_URL   = os.getenv("GEN_IMAGE_SERVER_URL")
 
 STATIC_FILES_DIR  = "src/static"
 TEMPLATES_DIR     = "src/templates"

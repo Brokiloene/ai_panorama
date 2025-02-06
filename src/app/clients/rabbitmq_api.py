@@ -4,7 +4,7 @@ import asyncio
 import aio_pika
 
 
-class RPCClient:
+class RabbitMQAPIClient:
     def __init__(
         self,
         exchange: aio_pika.Exchange,
@@ -24,7 +24,7 @@ class RPCClient:
         """
         Публикует сообщение с указанным `routing_key` в exchange,
         указывает reply_to = self.response_queue.name,
-        ждёт ответ (через correlation_id) или падает по таймауту.
+        ждёт ответ (через correlation_id) или падает по таймауту (в секундах).
         Возвращает байты ответа.
         """
         correlation_id = str(uuid.uuid4())

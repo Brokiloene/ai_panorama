@@ -4,14 +4,13 @@ services:
     ports:
       - 15672:15672
       - 5672:5672
-    hostname: ai_panorama_rabbitmq
-    container_name: ai_panorama_rabbitmq
+    container_name: aip_rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
       RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: -rabbit disk_free_limit 2147483648
     networks:
-      - ai_panorama_net
+      - aip_net
     volumes:
       - rabbitmq_data_container:/var/lib/rabbitmq
     healthcheck:
@@ -23,15 +22,14 @@ services:
 
   mongodb:
     image: mongo:8.0.4
-    hostname: ai_panorama_mongodb
-    container_name: ai_panorama_mongodb
+    container_name: aip_mongodb
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASS}
     ports:
       - 27017:27017
     networks:
-      - ai_panorama_net
+      - aip_net
     volumes:
       - mongodb_data_container:/data/db
     healthcheck:
@@ -40,13 +38,33 @@ services:
       timeout: 5s
       retries: 3
       start_period: 15s
-
+  
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: aip_minio
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
+    ports:
+      - 9000:9000
+      - 9001:9001
+    networks:
+      - aip_net
+    volumes:
+      - minio_data_container:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
   
   app:
     build:
       context: .
       dockerfile: Dockerfile.app
-    container_name: ai_panorama_app
+    container_name: aip_app
     ports:
       - 8000:8000
     depends_on:
@@ -54,13 +72,16 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+      minio:
+        condition: service_healthy
     networks:
-      - ai_panorama_net
+      - aip_net
     
 networks:
-  ai_panorama_net:
+  aip_net:
     driver: bridge
 
 volumes:
   mongodb_data_container:
   rabbitmq_data_container:
+  minio_data_container:
