@@ -3,10 +3,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-STATIC_FILES_DIR  = "src/static"
+STATIC_FILES_DIR  = "static"
 TEMPLATES_DIR     = "src/templates"
-IMAGES_DIR        = "src/static/images"
-IMAGE_PLACEHOLDER = "src/static/images/placeholder.png"
+# IMAGES_DIR        = "src/static/images"
+IMAGE_PLACEHOLDER = "static/images/placeholder.png"
 
 import logging
 
