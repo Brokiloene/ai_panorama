@@ -1,7 +1,8 @@
-from aio_pika import ExchangeType
-
 import os
+
+from aio_pika import ExchangeType
 from dotenv import load_dotenv
+
 load_dotenv()
 
 USER = os.getenv("RABBITMQ_USER")
