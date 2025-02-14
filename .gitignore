@@ -5,5 +5,8 @@ Local/
 .env
 logs/*
 certs/*
-# certs/CAs/*
-!.gitignore
+!certs/*.dummy
+
+!certs/CAs/
+certs/CAs/*
+!certs/CAs/.gitkeep
