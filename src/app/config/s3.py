@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 
 from app.config import system
 
-
 load_dotenv()
 
 ACCESS_KEY = os.getenv("S3_ACCESS_KEY", "")

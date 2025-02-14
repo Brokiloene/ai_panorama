@@ -3,8 +3,7 @@ from typing import NamedTuple
 
 from dotenv import load_dotenv
 
-from app import config
-
+from app.config import system
 
 load_dotenv()
 
@@ -26,6 +25,6 @@ class MongoConfig(NamedTuple):
 mongo_config: MongoConfig = MongoConfig(
     host=URL,
     tls=True,
-    tlsCertificateKeyFile=config.system.TLS_COMBINED_CERT,
+    tlsCertificateKeyFile=system.TLS_COMBINED_CERT,
     tlsAllowInvalidCertificates=True,
 )

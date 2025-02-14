@@ -1,0 +1,53 @@
+repos:
+  - repo: https://github.com/PyCQA/isort
+    rev: 6.0.0
+    hooks:
+      - id: isort
+        args: ["--profile=black"]
+
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.2
+    hooks:
+      - id: bandit
+        args: ["-ll", "--skip", "B104"] # B104 - 0.0.0.0 hardcoded bind
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        args:
+          - "--max-line-length=88"
+          - "--per-file-ignores=__init__.py:F401" # not used imports in __init__
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.15.0
+    hooks:
+      - id: mypy
+        args: 
+          - "--check-untyped-defs"
+          - "--ignore-missing-imports"
+          - "src"
+        additional_dependencies:
+          - types-aiobotocore-s3
+          - types-aioboto3
+          - types-aiofiles
+          - motor-types
+        pass_filenames: false
+        files: ^src/
+
+  - repo: https://github.com/PyCQA/pylint
+    rev: v3.3.4
+    hooks:
+      - id: pylint
+        args:
+          - "--disable=C0114" # missing-module-docstring
+          - "--disable=C0115" # missing-class-docstring
+          - "--disable=C0116" # missing-function-docstring
+          - "--disable=E0401" # import-error
+          - "--disable=R0913" # too-many-arguments
+          - "--disable=R0917" # too-many-positional-args
+          - "--min-public-methods=0"

@@ -14,7 +14,7 @@ from app.dependencies import get_ai_api_service, get_news_dao, get_s3_service, l
 from app.exceptions import S3LoadError, S3NotFoundError
 from app.models import Article
 from app.services import AIApiService, S3Service
-from app.views.html_view import html_view
+from app.views import html_render
 
 app = FastAPI(lifespan=lifespan)
 
@@ -37,7 +37,7 @@ app.mount(
 async def get_root(news_dao: NewsDAO = Depends(get_news_dao)):
     template_name = "index.jinja"
     data = await news_dao.read_multiple(None, config.html.NEWS_LOAD_BATCH_SIZE)
-    return html_view(template_name, data)
+    return html_render(template_name, data)
 
 
 @app.get("/get-news/", status_code=200)
@@ -49,7 +49,7 @@ async def get_news(
     if data == []:
         response.status_code = status.HTTP_204_NO_CONTENT
     else:
-        return html_view(template_name, data)
+        return html_render(template_name, data)
 
 
 @app.get("/image/{file_key}")
@@ -116,7 +116,7 @@ async def gen_title(
         logger.error("Timeout while waiting for RPC response")
         return Response(content="Failed to fetch title (timeout)", status_code=500)
     text_response = response_body.decode("utf-8")
-    logger.info(f"[x] Got generated title: {text_response}")
+    logger.info("[x] Got generated title: %s", text_response)
     return Response(content=text_response, media_type="text/plain")
 
 
@@ -135,7 +135,7 @@ async def gen_article(
         return Response(content="Failed to fetch article (timeout)", status_code=500)
 
     text_response = response_body.decode("utf-8")
-    logger.info(f"[x] Got generated article: {text_response}")
+    logger.info("[x] Got generated article: %s", text_response)
     return Response(content=text_response, media_type="text/plain")
 
 

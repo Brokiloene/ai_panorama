@@ -10,10 +10,10 @@ from app.config.system import logger
 class AIApiService:
     def __init__(self):
         self.pending_requests: dict[str, asyncio.Future] = {}
-        self.connection = None
-        self.channel = None
-        self.exchange = None
-        self.response_queue = None
+        self.connection: aio_pika.abc.AbstractRobustConnection
+        self.channel: aio_pika.abc.AbstractChannel
+        self.exchange: aio_pika.abc.AbstractExchange
+        self.response_queue: aio_pika.abc.AbstractQueue
 
     async def start_connection(self):
         self.connection = await aio_pika.connect_robust(config.rabbitmq.URL)
@@ -51,9 +51,9 @@ class AIApiService:
     ) -> bytes:
         """
         Публикует сообщение с указанным `routing_key` в exchange,
-        указывает `reply_to = self.response_queue.name`,
-        ждёт ответ (через correlation_id) или падает по таймауту (в секундах).
-        :raises `TimeoutError`:
+        возвращает ответ или падает по таймауту (в секундах).
+
+        :raises: `TimeoutError`
         """
         correlation_id = str(uuid.uuid4())
         loop = asyncio.get_running_loop()
@@ -68,7 +68,7 @@ class AIApiService:
 
         await self.exchange.publish(msg, routing_key=routing_key)
         logger.info(
-            f"[x] Sent AI API request (corr_id={correlation_id}) via '{routing_key}'"
+            "[x] Sent AI API request (corr_id=%s) via '%s'", correlation_id, routing_key
         )
 
         try:
@@ -77,6 +77,8 @@ class AIApiService:
         except asyncio.TimeoutError as exc:
             self.pending_requests.pop(correlation_id, None)
             logger.warning(
-                f"AI API request (corr_id={correlation_id}) via '{routing_key}' timet out"
+                "AI API request (corr_id=%s) via '%s' timet out",
+                correlation_id,
+                routing_key,
             )
             raise TimeoutError("AI API request timed out") from exc

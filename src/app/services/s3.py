@@ -43,7 +43,7 @@ class S3Service:
             await client.upload_fileobj(
                 data, bucket, object_name, ExtraArgs={"ContentType": content_type}
             )
-            logger.info(f"Object {object_name} uploaded")
+            logger.info("Object %s uploaded", object_name)
         except botocore.exceptions.ClientError as exc:
             raise S3LoadError(
                 message="S3 file upload error", bucket=bucket, object_name=object_name
@@ -58,9 +58,9 @@ class S3Service:
         """
         try:
             data = await client.get_object(Bucket=bucket, Key=object_name)
-            logger.info(f"Object {object_name} downloaded")
+            logger.info("Object %s downloaded", object_name)
         except botocore.exceptions.ClientError as exc:
-            logger.error(f"S3 file load error: {exc} ({type(exc)})")
+            logger.error("S3 file load error: %s (%s)", exc, type(exc))
             if exc.response["Error"]["Code"] == "NoSuchKey":
                 raise S3NotFoundError(
                     message="Could not find object with such key",
