@@ -33,13 +33,13 @@ class S3Service:
         :raises `S3LoadError`:
         :raises `S3NotFoundError`:
         """
+        if content_type is None:
+            raise S3LoadError(
+                message="File Upload format is None",
+                bucket=bucket,
+                object_name=object_name,
+            )
         try:
-            if content_type is None:
-                raise S3LoadError(
-                    message="File Upload format is None",
-                    bucket=bucket,
-                    object_name=object_name,
-                )
             await client.upload_fileobj(
                 data, bucket, object_name, ExtraArgs={"ContentType": content_type}
             )

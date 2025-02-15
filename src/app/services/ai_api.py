@@ -73,7 +73,6 @@ class AIApiService:
 
         try:
             body = await asyncio.wait_for(future, timeout=timeout)
-            return body
         except asyncio.TimeoutError as exc:
             self.pending_requests.pop(correlation_id, None)
             logger.warning(
@@ -82,3 +81,4 @@ class AIApiService:
                 routing_key,
             )
             raise TimeoutError("AI API request timed out") from exc
+        return body

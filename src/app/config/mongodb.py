@@ -28,3 +28,6 @@ mongo_config: MongoConfig = MongoConfig(
     tlsCertificateKeyFile=system.TLS_COMBINED_CERT,
     tlsAllowInvalidCertificates=True,
 )
+
+DB_NAME = "ai_panorama"
+NEWS_COLLECTION_NAME = "news"

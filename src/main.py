@@ -45,7 +45,7 @@ async def get_news(
     start_id: str, response: Response, news_dao: NewsDAO = Depends(get_news_dao)
 ):
     template_name = "form_news.jinja"
-    data = await news_dao.read_multiple(start_id, 9)
+    data = await news_dao.read_multiple(start_id, config.html.NEWS_LOAD_BATCH_SIZE)
     if data == []:
         response.status_code = status.HTTP_204_NO_CONTENT
     else:
@@ -65,13 +65,13 @@ async def get_image(file_key: str, s3_service: S3Service = Depends(get_s3_servic
 
     try:
         stream = s3_stream()
-        media_type = await anext(stream)
-        return StreamingResponse(stream, media_type=media_type)
     except S3NotFoundError:
         return Response(status_code=status.HTTP_404_NOT_FOUND)
 
     except S3LoadError:
         return Response(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    media_type = await anext(stream)
+    return StreamingResponse(stream, media_type=media_type)
 
 
 @app.post("/add-article")
@@ -114,7 +114,10 @@ async def gen_title(
         )
     except TimeoutError:
         logger.error("Timeout while waiting for RPC response")
-        return Response(content="Failed to fetch title (timeout)", status_code=500)
+        return Response(
+            content="Failed to fetch title (timeout)",
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+        )
     text_response = response_body.decode("utf-8")
     logger.info("[x] Got generated title: %s", text_response)
     return Response(content=text_response, media_type="text/plain")
@@ -132,7 +135,10 @@ async def gen_article(
         )
     except TimeoutError:
         logger.error("Timeout while waiting for article")
-        return Response(content="Failed to fetch article (timeout)", status_code=500)
+        return Response(
+            content="Failed to fetch article (timeout)",
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+        )
 
     text_response = response_body.decode("utf-8")
     logger.info("[x] Got generated article: %s", text_response)
@@ -151,7 +157,10 @@ async def gen_image(
         )
     except TimeoutError:
         logger.error("Timeout while waiting for image")
-        return Response(content="Failed to fetch image (timeout)", status_code=500)
+        return Response(
+            content="Failed to fetch image (timeout)",
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+        )
 
     logger.info("[x] Got image response")
     return Response(content=response_body, media_type="image/png")
