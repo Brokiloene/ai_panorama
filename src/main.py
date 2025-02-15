@@ -1,32 +1,6 @@
 import uvicorn
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 
-from app import config
-from app.dependencies import lifespan
-from app.exception_handlers import EXCEPTION_HANDLERS
-
-app = FastAPI(lifespan=lifespan)
-
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-app.mount(
-    f"/{config.system.STATIC_FILES_DIR}",
-    StaticFiles(directory=config.system.STATIC_FILES_DIR),
-    name="static",
-)
-
-for exc_cls, handler in EXCEPTION_HANDLERS:
-    app.add_exception_handler(exc_cls, handler)
-
+from app import app, config
 
 if __name__ == "__main__":
     uvicorn.run(
@@ -34,7 +8,7 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=8000,
         log_config=None,
-        ssl_certfile=config.system.TLS_CERTIFICATE,
-        ssl_keyfile=config.system.TLS_PRIVATE_KEY,
+        ssl_certfile=config.app.TLS_CERTIFICATE,
+        ssl_keyfile=config.app.TLS_PRIVATE_KEY,
         ssl_ciphers="TLSv1",
     )
