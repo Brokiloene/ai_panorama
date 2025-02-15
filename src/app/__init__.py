@@ -18,8 +18,8 @@ app.add_middleware(
 )
 
 app.mount(
-    f"/{config.system.STATIC_FILES_DIR}",
-    StaticFiles(directory=config.system.STATIC_FILES_DIR),
+    f"/{config.app.STATIC_FILES_DIR}",
+    StaticFiles(directory=config.app.STATIC_FILES_DIR),
     name="static",
 )
 

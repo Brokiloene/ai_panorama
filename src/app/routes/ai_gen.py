@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query, Response
 
 from app import config
-from app.config.system import logger
+from app.config.app import logger
 from app.dependencies import get_ai_api_service
 from app.exceptions import AiAPITimeoutError
 from app.services import AIApiService

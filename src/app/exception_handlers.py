@@ -1,6 +1,5 @@
 from typing import Any, Callable, Type
 
-from config.system import logger
 from exceptions import (
     AiAPITimeoutError,
     DatabaseConnectionError,
@@ -11,6 +10,8 @@ from exceptions import (
 )
 from fastapi import status
 from fastapi.responses import JSONResponse
+
+from app.config.app import logger
 
 
 async def internal_server_error_handler(exc: Exception):

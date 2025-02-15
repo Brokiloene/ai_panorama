@@ -1,1 +1,1 @@
-from . import html, mongodb, rabbitmq, s3, system
+from . import app, html, mongodb, rabbitmq, s3
