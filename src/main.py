@@ -12,7 +12,7 @@ from app.config.system import logger
 from app.dao.news import NewsDAO
 from app.dependencies import get_ai_api_service, get_news_dao, get_s3_service, lifespan
 from app.exception_handlers import EXCEPTION_HANDLERS
-from app.exceptions import S3LoadError, S3NotFoundError
+from app.exceptions import AiAPITimeoutError
 from app.models import Article
 from app.services import AIApiService, S3Service
 from app.views import html_render
@@ -68,13 +68,7 @@ async def get_image(file_key: str, s3_service: S3Service = Depends(get_s3_servic
             async for chunk in data["Body"]:
                 yield chunk
 
-    try:
-        stream = s3_stream()
-    except S3NotFoundError:
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
-
-    except S3LoadError:
-        return Response(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    stream = s3_stream()
     media_type = await anext(stream)
     return StreamingResponse(stream, media_type=media_type)
 
@@ -88,19 +82,14 @@ async def create_article(
     s3_service: S3Service = Depends(get_s3_service),
 ):
     object_name = str(uuid.uuid4())
-    try:
-        async with await s3_service.get_s3_client() as client:
-            await s3_service.upload_object(
-                client,
-                image.file,
-                config.s3.NEWS_IMGS_BUCKET,
-                object_name,
-                image.content_type,
-            )
-    except S3NotFoundError:
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
-    except S3LoadError:
-        return Response(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    async with await s3_service.get_s3_client() as client:
+        await s3_service.upload_object(
+            client,
+            image.file,
+            config.s3.NEWS_IMGS_BUCKET,
+            object_name,
+            image.content_type,
+        )
 
     await news_dao.create(
         Article(image_path=object_name, title=title, article_text=article_text)
@@ -118,13 +107,9 @@ async def gen_title(
             timeout=5.0,
         )
     except TimeoutError:
-        logger.error("Timeout while waiting for RPC response")
-        return Response(
-            content="Failed to fetch title (timeout)",
-            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
-        )
+        raise AiAPITimeoutError("article headline generation") from None
     text_response = response_body.decode("utf-8")
-    logger.info("[x] Got generated title: %s", text_response)
+    logger.info("Got generated article headline: %s", text_response)
     return Response(content=text_response, media_type="text/plain")
 
 
@@ -136,17 +121,13 @@ async def gen_article(
         response_body = await ai_api_service.send_request(
             message_body=bytes(prompt, encoding="utf-8"),
             routing_key=config.rabbitmq.ROUTING_KEY_ARTICLE,
-            timeout=5.0,
+            timeout=10.0,
         )
     except TimeoutError:
-        logger.error("Timeout while waiting for article")
-        return Response(
-            content="Failed to fetch article (timeout)",
-            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
-        )
+        raise AiAPITimeoutError("article body generation") from None
 
     text_response = response_body.decode("utf-8")
-    logger.info("[x] Got generated article: %s", text_response)
+    logger.info("Got generated article body: %s", text_response)
     return Response(content=text_response, media_type="text/plain")
 
 
@@ -158,16 +139,11 @@ async def gen_image(
         response_body = await ai_api_service.send_request(
             message_body=bytes(prompt, encoding="utf-8"),
             routing_key=config.rabbitmq.ROUTING_KEY_IMAGE,
-            timeout=5.0,
+            timeout=30.0,
         )
     except TimeoutError:
-        logger.error("Timeout while waiting for image")
-        return Response(
-            content="Failed to fetch image (timeout)",
-            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
-        )
+        raise AiAPITimeoutError("article thumbnail generation") from None
 
-    logger.info("[x] Got image response")
     return Response(content=response_body, media_type="image/png")
 
 
@@ -179,4 +155,5 @@ if __name__ == "__main__":
         log_config=None,
         ssl_certfile=config.system.TLS_CERTIFICATE,
         ssl_keyfile=config.system.TLS_PRIVATE_KEY,
+        ssl_ciphers="TLSv1",
     )
