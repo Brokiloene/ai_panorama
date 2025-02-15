@@ -1,10 +1,11 @@
 import uvicorn
 
-from app import app, config
+from app import config
+from app.app import mainApp
 
 if __name__ == "__main__":
     uvicorn.run(
-        app,
+        mainApp,
         host="0.0.0.0",
         port=8000,
         log_config=None,

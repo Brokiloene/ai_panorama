@@ -4,9 +4,9 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, Request
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from app.config.mongodb import mongo_config
-from app.dao.news import NewsDAO
-from app.services import AIApiService, S3Service
+from .config.mongodb import mongo_config
+from .dao.news import NewsDAO
+from .services import AIApiService, S3Service
 
 
 def get_db_client() -> AsyncIOMotorClient:
@@ -25,7 +25,9 @@ async def get_s3_service() -> S3Service:
 async def get_news_dao(
     client: Annotated[AsyncIOMotorClient, Depends(get_db_client)],
 ) -> NewsDAO:
-    return NewsDAO(client)
+    news_dao = NewsDAO(client)
+    await news_dao.start_connection()
+    return news_dao
 
 
 async def get_ai_api_service(request: Request) -> AIApiService:
@@ -35,5 +37,6 @@ async def get_ai_api_service(request: Request) -> AIApiService:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.ai_api_service = AIApiService()
+    await app.state.ai_api_service.start_connection()
     yield
     await app.state.ai_api_service.close_connection()

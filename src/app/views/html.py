@@ -18,10 +18,11 @@ def html_render(template_name: HTMLTemplate, data: list[Article]):
 
     :raises: `ViewTemplateNotFoundError`
     """
-    template = config.html.html_render_env.get_template(name=template_name)
-    if template_name == HTMLTemplate.INDEX:
-        prerendered_data = html_render(HTMLTemplate.LOAD_ARTICLES, data)
-        return template.render(data=prerendered_data)
-    if template_name == HTMLTemplate.LOAD_ARTICLES:
-        return template.render(news_list=data)
+    template = config.html.html_render_env.get_template(name=template_name.value)
+    match template_name:
+        case HTMLTemplate.INDEX:
+            prerendered_data = html_render(HTMLTemplate.LOAD_ARTICLES, data)
+            return template.render(data=prerendered_data)
+        case HTMLTemplate.LOAD_ARTICLES:
+            return template.render(news_list=data)
     raise ViewTemplateNotFoundError(f"Could not find template {template_name}")
