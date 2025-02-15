@@ -14,7 +14,7 @@ Dockerfile
 
 # Local
 Local/
-env/
+.venv/
 .vscode/
 
 !.env

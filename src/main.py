@@ -11,12 +11,14 @@ from app import config
 from app.config.system import logger
 from app.dao.news import NewsDAO
 from app.dependencies import get_ai_api_service, get_news_dao, get_s3_service, lifespan
+from app.exception_handlers import EXCEPTION_HANDLERS
 from app.exceptions import S3LoadError, S3NotFoundError
 from app.models import Article
 from app.services import AIApiService, S3Service
 from app.views import html_render
 
 app = FastAPI(lifespan=lifespan)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -31,6 +33,9 @@ app.mount(
     StaticFiles(directory=config.system.STATIC_FILES_DIR),
     name="static",
 )
+
+for exc_cls, handler in EXCEPTION_HANDLERS:
+    app.add_exception_handler(exc_cls, handler)
 
 
 @app.get("/", response_class=HTMLResponse)
