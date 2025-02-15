@@ -1,9 +1,17 @@
+from enum import Enum, unique
+
 from app import config
 from app.exceptions import ViewTemplateNotFoundError
 from app.models import Article
 
 
-def html_render(template_name: str, data: list[Article]):
+@unique
+class HTMLTemplate(Enum):
+    INDEX = "index.jinja"
+    LOAD_ARTICLES = "form_news.jinja"
+
+
+def html_render(template_name: HTMLTemplate, data: list[Article]):
     """
     Рендерит HTML страницу новостей по данному списку Article
     и названию шаблона
@@ -11,9 +19,9 @@ def html_render(template_name: str, data: list[Article]):
     :raises: `ViewTemplateNotFoundError`
     """
     template = config.html.html_render_env.get_template(name=template_name)
-    if template_name == "index.jinja":
-        prerendered_data = html_render("form_news.jinja", data)
+    if template_name == HTMLTemplate.INDEX:
+        prerendered_data = html_render(HTMLTemplate.LOAD_ARTICLES, data)
         return template.render(data=prerendered_data)
-    if template_name == "form_news.jinja":
+    if template_name == HTMLTemplate.LOAD_ARTICLES:
         return template.render(news_list=data)
     raise ViewTemplateNotFoundError(f"Could not find template {template_name}")

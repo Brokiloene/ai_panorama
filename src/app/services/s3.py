@@ -5,8 +5,8 @@ import botocore
 import botocore.exceptions
 import types_aiobotocore_s3
 
+from app.config.app import logger
 from app.config.s3 import s3_config
-from app.config.system import logger
 from app.exceptions import S3LoadError, S3NotFoundError
 
 

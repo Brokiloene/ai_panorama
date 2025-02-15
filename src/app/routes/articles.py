@@ -9,7 +9,7 @@ from app.dao.news import NewsDAO
 from app.dependencies import get_news_dao, get_s3_service
 from app.models import Article
 from app.services import S3Service
-from app.views import html_render
+from app.views import HTMLTemplate, html_render
 
 router = APIRouter(prefix="/articles", tags=["Articles"])
 
@@ -18,7 +18,7 @@ router = APIRouter(prefix="/articles", tags=["Articles"])
 async def get_article(
     start_id: str, response: Response, news_dao: NewsDAO = Depends(get_news_dao)
 ):
-    template_name = "form_news.jinja"
+    template_name = HTMLTemplate.LOAD_ARTICLES
     data = await news_dao.read_multiple(start_id, config.html.NEWS_LOAD_BATCH_SIZE)
     if data == []:
         response.status_code = status.HTTP_204_NO_CONTENT
