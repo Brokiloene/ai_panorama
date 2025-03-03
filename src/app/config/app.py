@@ -1,5 +1,6 @@
 import logging
 import logging.handlers
+import sys
 
 from dotenv import load_dotenv
 
@@ -38,3 +39,4 @@ stream_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
 logger.addHandler(stream_handler)
+logger.addHandler(logging.StreamHandler(sys.stdout))

@@ -28,28 +28,30 @@ async def get_article(
 
 @router.post("")
 async def create_article(
-    title: Annotated[str, Form()],
-    article_text: Annotated[str, Form()],
-    image: Annotated[UploadFile, File()],
+    article_headline: Annotated[str, Form()],
+    article_body: Annotated[str, Form()],
+    article_thumbnail: Annotated[UploadFile, File()],
     news_dao: NewsDAO = Depends(get_news_dao),
     s3_service: S3Service = Depends(get_s3_service),
 ):
-    object_name = str(uuid.uuid4())
+    thumbnail_id = str(uuid.uuid4())
     async with await s3_service.get_s3_client() as client:
         await s3_service.upload_object(
             client,
-            image.file,
+            article_thumbnail.file,
             config.s3.NEWS_IMGS_BUCKET,
-            object_name,
-            image.content_type,
+            thumbnail_id,
+            article_thumbnail.content_type,
         )
 
     await news_dao.create(
-        Article(image_path=object_name, title=title, article_text=article_text)
+        Article(
+            headline=article_headline, body=article_body, thumbnail_image=thumbnail_id
+        )
     )
 
 
-@router.get("image/{file_key}")
+@router.get("/image/{file_key}")
 async def get_article_image(
     file_key: str, s3_service: S3Service = Depends(get_s3_service)
 ):

@@ -24,5 +24,5 @@ def html_render(template_name: HTMLTemplate, data: list[Article]):
             prerendered_data = html_render(HTMLTemplate.LOAD_ARTICLES, data)
             return template.render(data=prerendered_data)
         case HTMLTemplate.LOAD_ARTICLES:
-            return template.render(news_list=data)
+            return template.render(articles_list=data)
     raise ViewTemplateNotFoundError(f"Could not find template {template_name}")

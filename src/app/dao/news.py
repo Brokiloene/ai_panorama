@@ -1,6 +1,5 @@
 from typing import Mapping
 
-from bson import ObjectId
 from motor.motor_asyncio import (
     AsyncIOMotorClient,
     AsyncIOMotorCollection,
@@ -28,6 +27,7 @@ class NewsDAO:
 
     async def start_connection(self):
         """
+        Инициализация подключения к хранилищу
         :raises: `DatabaseNotFoundError`
         :raises: `DatabaseConnectionError`
         """
@@ -50,21 +50,18 @@ class NewsDAO:
 
     async def read_multiple(self, start_id: str | None, amount: int) -> list[Article]:
         """
-        Считывает `amount`
+        Считывает `amount` объектов Article из хранилища
         """
         if start_id is None:
-            start_doc = await self.collection.find_one(sort=[("_id", 1)])
+            start_doc = await self.collection.find_one(sort=[("updated_at", 1)])
             if start_doc is None:
                 return []
-            start_id = start_doc["_id"]
-            query = {"_id": {"$gte": ObjectId(start_id)}}
+            start_id = start_doc["updated_at"]
+            query = {"updated_at": {"$gte": start_id}}
         else:
-            query = {"_id": {"$gt": ObjectId(start_id)}}
+            query = {"updated_at": {"$gt": start_id}}
         data: list[Mapping] = (
-            await self.collection.find(query)
-            .sort("_id", 1)
-            .limit(amount)
-            .to_list(length=amount)
+            await self.collection.find(query).limit(amount).to_list(length=amount)
         )
         res: list[Article] = [Article(**x) for x in data]
         return res
