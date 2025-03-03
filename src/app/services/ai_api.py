@@ -4,7 +4,7 @@ import uuid
 import aio_pika
 
 from app import config
-from app.config.system import logger
+from app.config.app import logger
 
 
 class AIApiService:

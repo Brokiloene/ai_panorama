@@ -1,7 +1,8 @@
 const genTitleBtn = document.querySelector(".gen-title-btn")
 const titleInput = document.querySelector("#title")
 genTitleBtn.addEventListener('click', async () => {
-  const response = await fetch(`/gen-title/?prompt=${titleInput.value}`)
+  const URL = '/ai-gen/article-headline?prompt='
+  const response = await fetch(`${URL}${titleInput.value}`)
   if (response.status == 500) {
     data = "Не удалось сгенерировать :("
   } else {
@@ -13,7 +14,8 @@ genTitleBtn.addEventListener('click', async () => {
 const genArticleBtn = document.querySelector(".gen-article-btn")
 const articleInput = document.querySelector("#article_text")
 genArticleBtn.addEventListener('click', async () => {
-  const response = await fetch(`/gen-article/?prompt=${articleInput.value}`)
+  const URL = '/ai-gen/article-body?prompt='
+  const response = await fetch(`${URL}${articleInput.value}`)
   let data = ""
   if (response.status == 500) {
     data = "Не удалось сгенерировать :("
@@ -37,7 +39,8 @@ genImageBtn.addEventListener('click', async () => {
   sendArticleBtn.disabled = true
 
   try {
-    const response = await fetch(`/gen-image/?prompt=${titleInput.value}${articleInput.value}`)
+    const URL = '/ai-gen/article-thumbnail'
+    const response = await fetch(`${URL}${titleInput.value}${articleInput.value}`)
     if (!response.ok) {
       console.error("Ошибка при получении изображения:", response.statusText)
       return

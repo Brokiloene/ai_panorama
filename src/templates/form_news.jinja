@@ -1,17 +1,17 @@
 {% set placeholder = "static/images/placeholder.png" %}
-{% for item in news_list %}
-    <a class="grid-element open-dialog" href="#{{ item._id }}">
-        <img src="{{ '/image/' + item.image_path if item.image_path else placeholder }}" onerror="this.onerror=null; this.src='static/images/placeholder.png'" alt="">
-        <span> {{ item.title }} </span>
+{% for article in articles_list %}
+    <a class="grid-element open-dialog" href="#{{ article.updated_at }}">
+        <img src="{{ '/articles/image/' + article.thumbnail_image if article.thumbnail_image else placeholder }}" onerror="this.onerror=null; this.src='static/images/placeholder.png'" alt="">
+        <span> {{ article.headline }} </span>
     </a>
 
-    <div id="{{ item._id }}" class="dialog item-wrapper">
+    <div id="{{ article.updated_at }}" class="dialog item-wrapper">
         <div class="item-content">
             <a href="#" class="close-dialog">&times;</a>
-            <img src="{{ '/image/' + item.image_path if item.image_path else placeholder }}" onerror="this.onerror=null; this.src='static/images/placeholder.png'" alt="">
-            <h2>{{ item.title }}</h2>
+            <img src="{{ '/articles/image/' + article.thumbnail_image if article.thumbnail_image else placeholder }}" onerror="this.onerror=null; this.src='static/images/placeholder.png'" alt="">
+            <h2>{{ article.headline }}</h2>
             <span>
-                {{ item.article_text }}
+                {{ article.body }}
             </span>
         </div>
     </div>

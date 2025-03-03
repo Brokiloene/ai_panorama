@@ -3,7 +3,7 @@ from typing import NamedTuple
 
 from dotenv import load_dotenv
 
-from app.config import system
+from app.config import app
 
 load_dotenv()
 
@@ -28,5 +28,5 @@ s3_config = S3Config(
     endpoint_url=URL,
     aws_access_key_id=ACCESS_KEY,
     aws_secret_access_key=SECRET_KEY,
-    verify=system.TLS_CERTIFICATE,
+    verify=app.TLS_CERTIFICATE,
 )

@@ -1,1 +1,1 @@
-from .html_view import html_render
+from .html import HTMLTemplate, html_render
