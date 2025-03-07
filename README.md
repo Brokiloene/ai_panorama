@@ -15,7 +15,7 @@
 |||
 |-|-|
 |**Backend**| Unicorn, Fastapi, Minio, RabbitMQ, MongoDB, Jinja|
-|**Frontend**| HTML, CSS, JS|
+|**Frontend**| HTML, CSS/SCSS, JS|
 
 ## Архитектура (схема C4)
 ![](./docs/architecture.png)
