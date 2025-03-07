@@ -14,7 +14,7 @@
 ## Стек
 |||
 |-|-|
-|**Backend**| Fastapi, Minio, RabbitMQ, MongoDB, Jinja|
+|**Backend**| Unicorn, Fastapi, Minio, RabbitMQ, MongoDB, Jinja|
 |**Frontend**| HTML, CSS, JS|
 
 ## Архитектура (схема C4)
