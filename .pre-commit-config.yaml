@@ -51,3 +51,5 @@ repos:
           - "--disable=R0913" # too-many-arguments
           - "--disable=R0917" # too-many-positional-args
           - "--min-public-methods=0"
+          # - "--disable=W0621" # redefined-outer-name (for tests)
+        files: ^src/

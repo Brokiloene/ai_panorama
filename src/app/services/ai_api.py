@@ -76,7 +76,7 @@ class AIApiService:
         except asyncio.TimeoutError as exc:
             self.pending_requests.pop(correlation_id, None)
             logger.warning(
-                "AI API request (corr_id=%s) via '%s' timet out",
+                "AI API request (corr_id=%s) via '%s' timed out",
                 correlation_id,
                 routing_key,
             )

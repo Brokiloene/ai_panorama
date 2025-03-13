@@ -5,6 +5,7 @@ Local/
 .env
 logs/*
 certs/*
+.coverage
 !certs/*.dummy
 
 !certs/CAs/
